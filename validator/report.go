@@ -27,10 +27,16 @@ type StoryReport struct {
 	Features    []FeatureReport `json:"features,omitempty"`
 }
 
+type TestReport struct {
+	Description string          `json:"description,omitempty"`
+	Features    []FeatureReport `json:"features,omitempty"`
+}
+
 // Report contains test results.
 type Report struct {
 	Stories  []StoryReport   `json:"stories,omitempty"`
 	Features []FeatureReport `json:"features,omitempty"`
+	Tests    []TestReport    `json:"tests,omitempty"`
 }
 
 func (r *testRunner) report() Report {
@@ -46,6 +52,17 @@ func (r *testRunner) report() Report {
 		if _, ok := reported[f.conf.key]; !ok {
 			report.Features = append(report.Features, r.reportFeature(f.conf.key))
 		}
+	}
+	for _, t := range r.tests {
+		report.Tests = append(report.Tests, r.reportTest(t))
+	}
+	return report
+}
+
+func (r *testRunner) reportTest(test testConf) TestReport {
+	report := TestReport{Description: test.description}
+	for _, t := range test.features {
+		report.Features = append(report.Features, r.reportFeature(t))
 	}
 	return report
 }

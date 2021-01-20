@@ -137,6 +137,13 @@ func printConsole(report *validator.Report) {
 		fmt.Println(hr)
 		printFeature(&feature)
 	}
+	for _, t := range report.Tests {
+		fmt.Println(hr)
+		fmt.Println(aurora.Bold(aurora.Magenta("# " + t.Description)))
+		for _,feature := range t.Features{
+			printFeature(&feature)
+		}
+	}
 }
 
 func colorizeStatus(text string) aurora.Value {
